@@ -379,7 +379,7 @@ Private Sub btnCheckID_Click()
     Set Response = htCashbillService.CheckID(txtUserID.Text)
     
     If Response Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
@@ -397,7 +397,7 @@ Private Sub btnCheckIsMember_Click()
     Set Response = htCashbillService.CheckIsMember(txtCorpNum.Text, linkID)
     
     If Response Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
@@ -416,7 +416,7 @@ Private Sub btnGetBalance_Click()
     balance = htCashbillService.GetBalance(txtCorpNum.Text)
     
     If balance < 0 Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
@@ -433,7 +433,7 @@ Private Sub btnGetCertificateExpireDate_Click()
     expireDate = htCashbillService.GetCertificateExpireDate(txtCorpNum.Text)
     
     If expireDate = "" Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
@@ -450,9 +450,10 @@ Private Sub btnGetCertificatePopUpURL_Click()
     url = htCashbillService.GetCertificatePopUpURL(txtCorpNum.Text, txtUserID.Text)
     
     If url = "" Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
+    
     MsgBox "URL : " + vbCrLf + url
 End Sub
 
@@ -462,15 +463,14 @@ End Sub
 
 Private Sub btnGetChargeInfo_Click()
     Dim ChargeInfo As PBChargeInfo
+    Dim tmp As String
     
     Set ChargeInfo = htCashbillService.GetChargeInfo(txtCorpNum.Text)
      
     If ChargeInfo Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
-    
-    Dim tmp As String
     
     tmp = tmp + "unitCost ([정액제]월정액요금) : " + ChargeInfo.unitCost + vbCrLf
     tmp = tmp + "chargeMethod (과금유형) : " + ChargeInfo.chargeMethod + vbCrLf
@@ -485,15 +485,14 @@ End Sub
 
 Private Sub btnGetCorpInfo_Click()
     Dim CorpInfo As PBCorpInfo
+    Dim tmp As String
     
     Set CorpInfo = htCashbillService.GetCorpInfo(txtCorpNum.Text, txtUserID.Text)
      
     If CorpInfo Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
-    
-    Dim tmp As String
     
     tmp = tmp + "ceoname(대표자성명) : " + CorpInfo.ceoname + vbCrLf
     tmp = tmp + "corpName(상호명) : " + CorpInfo.corpName + vbCrLf
@@ -516,9 +515,10 @@ Private Sub btnGetFlatRatePopUpURL_Click()
     url = htCashbillService.GetFlatRatePopUpURL(txtCorpNum.Text, txtUserID.Text)
     
     If url = "" Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
+    
     MsgBox "URL : " + vbCrLf + url
 End Sub
 
@@ -528,15 +528,14 @@ End Sub
 
 Private Sub btnGetFlatRateState_Click()
     Dim flatRateInfo As PBHTCashbillFlatRate
+    Dim tmp As String
     
     Set flatRateInfo = htCashbillService.GetFlatRateState(txtCorpNum.Text)
      
     If flatRateInfo Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
-    
-    Dim tmp As String
     
     tmp = tmp + "referencdeID (사업자번호) : " + flatRateInfo.referenceID + vbCrLf
     tmp = tmp + "contractDT (정액제 서비스 시작일시) : " + flatRateInfo.contractDT + vbCrLf
@@ -559,15 +558,14 @@ End Sub
 
 Private Sub btnGetJobState_Click()
     Dim jobInfo As PBHTCashbillJobState
+    Dim tmp As String
     
     Set jobInfo = htCashbillService.GetJobState(txtCorpNum.Text, txtJobID.Text)
      
     If jobInfo Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
-    
-    Dim tmp As String
     
     tmp = tmp + "jobID (작업아이디) : " + jobInfo.jobID + vbCrLf
     tmp = tmp + "jobState (수집상태) : " + CStr(jobInfo.jobState) + vbCrLf
@@ -597,7 +595,7 @@ Private Sub btnGetPartnerBalance_Click()
     balance = htCashbillService.GetPartnerBalance(txtCorpNum.Text)
     
     If balance < 0 Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
@@ -615,9 +613,10 @@ Private Sub btnGetPopbillURL_LOGIN_Click()
     url = htCashbillService.GetPopbillURL(txtCorpNum.Text, txtUserID.Text, "LOGIN")
     
     If url = "" Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
+    
     MsgBox "URL : " + vbCrLf + url
 End Sub
 
@@ -674,7 +673,7 @@ Private Sub btnJoinMember_Click()
     Set Response = htCashbillService.JoinMember(joinData)
     
     If Response Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
@@ -690,20 +689,18 @@ End Sub
 
 Private Sub btnListActiveJob_Click()
     Dim jobList As Collection
-        
+    Dim tmp As String
+    Dim info As PBHTCashbillJobState
+    
     Set jobList = htCashbillService.ListActiveJob(txtCorpNum.Text)
      
     If jobList Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
-    Dim tmp As String
-    
     tmp = tmp + "작업아이디(jobID)의 유효시간은 1시간입니다" + vbCrLf + vbCrLf
     tmp = tmp + "jobID | jobState | queryType | queryDateType | queryStDate | queryEnDate | errorCode | errorReason | jobStartDT | jobEndDT | collectCount | regDT " + vbCrLf
-    
-    Dim info As PBHTCashbillJobState
     
     For Each info In jobList
         tmp = tmp + CStr(info.jobID) + " | "
@@ -734,19 +731,17 @@ End Sub
 
 Private Sub btnListContact_Click()
     Dim resultList As Collection
-        
+    Dim tmp As String
+    Dim info As PBContactInfo
+    
     Set resultList = htCashbillService.ListContact(txtCorpNum.Text, txtUserID.Text)
      
     If resultList Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
-    Dim tmp As String
-    
     tmp = "id | email | hp | personName | searchAllAllowYN | tel | fax | mgrYN | regDT " + vbCrLf
-    
-    Dim info As PBContactInfo
     
     For Each info In resultList
         tmp = tmp + info.id + " | " + info.email + " | " + info.hp + " | " + info.personName + " | " + CStr(info.searchAllAllowYN) _
@@ -767,9 +762,10 @@ Private Sub btnPopbillURL_CHRG_Click()
     url = htCashbillService.GetPopbillURL(txtCorpNum.Text, txtUserID.Text, "CHRG")
     
     If url = "" Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
+    
     MsgBox "URL : " + vbCrLf + url
 End Sub
 
@@ -811,7 +807,7 @@ Private Sub btnRegistContact_Click()
     Set Response = htCashbillService.RegistContact(txtCorpNum.Text, joinData, txtUserID.Text)
     
     If Response Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
@@ -832,7 +828,7 @@ Private Sub btnRequestJob_Click()
     Dim cbType As KeyType
     
     '현금영수증 유형, SELL-매출, BUY-매입, TURSTEE-위수탁
-    cbType = SELL
+    cbType = BUY
         
     '시작일자, 표시형식(yyyyMMdd)
     SDate = "20160901"
@@ -843,7 +839,7 @@ Private Sub btnRequestJob_Click()
     jobID = htCashbillService.RequestJob(txtCorpNum.Text, cbType, SDate, EDate)
     
     If jobID = "" Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
@@ -868,7 +864,7 @@ Private Sub btnSearch_Click()
     Dim order As String
     Dim tmp As String
     Dim rowTmp As String
-    
+    Dim cbInfo As PBHTCashbill
     
     '현금영수증 형태 배열, N-일반현금영수증, C-취소현금영수증
     tradeType.Add "N"
@@ -887,13 +883,11 @@ Private Sub btnSearch_Click()
     '정렬 방향, D-내림차순, A-오름차순
     order = "D"
         
-        
-    'Search 호출
     Set SearchList = htCashbillService.Search(txtCorpNum.Text, txtJobID.Text, tradeType, tradeUsage, page, perPage, order)
     
         
     If SearchList Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
@@ -908,8 +902,6 @@ Private Sub btnSearch_Click()
     
     cashbillList.AddItem "구분 | 거래일시 | 식별번호 | 공급가액 | 세액 | 봉사료 | 거래금액 | 문서형태 | 국세청승인번호", 0
     
-    Dim cbInfo As PBHTCashbill
-           
     For Each cbInfo In SearchList.list
         ' 추가적인 현금영수증 항목은 [홈택스 현금영수증 연계 API 연동매뉴얼 > 4.1.응답전문 구성] 을 참조하시기 바랍니다.'
         rowTmp = ""
@@ -947,7 +939,6 @@ Private Sub btnSummary_Click()
     Dim tmp As String
     Dim rowTmp As String
     
-    
     '현금영수증 형태 배열, N-일반현금영수증, C-취소현금영수증
     tradeType.Add "N"
     tradeType.Add "C"
@@ -955,14 +946,13 @@ Private Sub btnSummary_Click()
     '거래용도 배열, P-소득공제용, C-지출증빙용
     tradeUsage.Add "P"
     tradeUsage.Add "C"
-                
        
     'Summary 호출
     Set summaryInfo = htCashbillService.Summary(txtCorpNum.Text, txtJobID.Text, tradeType, tradeUsage)
     
         
     If summaryInfo Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
@@ -1008,7 +998,7 @@ Private Sub btnUpdateContact_Click()
     Set Response = htCashbillService.UpdateContact(txtCorpNum.Text, joinData, txtUserID.Text)
     
     If Response Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htTaxinvoiceService.LastErrCode) + vbCrLf + "응답메시지 : " + htTaxinvoiceService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
@@ -1041,11 +1031,11 @@ Private Sub btnUpdateCorpInfo_Click()
     Set Response = htCashbillService.UpdateCorpInfo(txtCorpNum.Text, CorpInfo, txtUserID.Text)
     
     If Response Is Nothing Then
-        MsgBox ("[" + CStr(htCashbillService.LastErrCode) + "] " + htCashbillService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox ("[" + CStr(Response.code) + "] " + Response.Message)
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
 End Sub
 
 Private Sub Form_Load()
