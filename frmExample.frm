@@ -339,7 +339,7 @@ Attribute VB_Exposed = False
 '
 ' - VB6 SDK 연동환경 설정방법 안내 :
 ' - 업데이트 일자 : 2016-10-12
-' - 연동 기술지원 연락처 : 1600-8536 / 070-4504-2991 (직통 / 정요한대리)
+' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991 (직통 / 정요한대리)
 ' - 연동 기술지원 이메일 : dev@linkhub.co.kr
 '
 ' <테스트 연동개발 준비사항>
@@ -828,7 +828,7 @@ Private Sub btnRequestJob_Click()
     Dim cbType As KeyType
     
     '현금영수증 유형, SELL-매출, BUY-매입, TURSTEE-위수탁
-    cbType = BUY
+    cbType = SELL
         
     '시작일자, 표시형식(yyyyMMdd)
     SDate = "20160901"
