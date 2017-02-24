@@ -1,4 +1,4 @@
-frmExample = 110, 145, 1363, 762, , 22, 29, 1020, 878, C
+frmExample = 110, 145, 1363, 762, Z, 22, 29, 1020, 878, C
 cStringBuilder = 0, 0, 0, 0, C
 Linkhub = 198, 261, 1451, 878, 
 LinkhubToken = 0, 0, 0, 0, C
@@ -9,7 +9,7 @@ PBHTCashbill = 0, 0, 0, 0, C
 PBHTCashbillFlatRate = 0, 0, 0, 0, C
 PBHTCashbillJobState = 0, 0, 0, 0, C
 PBHTCashbillSearch = 0, 0, 0, 0, C
-PBHTCashbillService = 0, 0, 0, 0, C
+PBHTCashbillService = 88, 116, 1321, 768, 
 PBHTCashbillSummary = 0, 0, 0, 0, C
 PBJoinForm = 0, 0, 0, 0, C
 PBResponse = 0, 0, 0, 0, C
