@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form frmExample 
-   Caption         =   "팝빌 홈택스 현금영수증 연계 API SDK Example"
+   Caption         =   "팝빌 홈택스 현금영수증 매입매출 조회 API SDK Example"
    ClientHeight    =   11430
    ClientLeft      =   60
    ClientTop       =   450
@@ -337,8 +337,8 @@ Attribute VB_Exposed = False
 '
 ' 팝빌 홈택스 현금영수증 매입매출 API VB 6.0 SDK Example
 '
-' - VB6 SDK 연동환경 설정방법 안내 :
-' - 업데이트 일자 : 2017-02-23
+' - VB6 SDK 연동환경 설정방법 안내 : http://blog.linkhub.co.kr/569/
+' - 업데이트 일자 : 2017-05-24
 ' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991
 ' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
@@ -974,6 +974,8 @@ Private Sub btnUpdateContact_Click()
     Dim joinData As New PBContactInfo
     Dim Response As PBResponse
     
+    '담당자 아이디
+    joinData.id = txtUserID.Text
     '담당자명
     joinData.personName = "담당자명_수정"
     
