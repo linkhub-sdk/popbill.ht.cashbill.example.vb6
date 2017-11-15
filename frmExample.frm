@@ -54,7 +54,7 @@ Begin VB.Form frmExample
             Width           =   2535
          End
          Begin VB.CommandButton btnGetCertificatePopUpURL 
-            Caption         =   "공인인증서 등록 URL"
+            Caption         =   "홈택스 인증관리 팝업 URL"
             Height          =   410
             Left            =   120
             TabIndex        =   30
