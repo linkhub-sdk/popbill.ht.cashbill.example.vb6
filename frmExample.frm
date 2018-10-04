@@ -1014,10 +1014,10 @@ Private Sub btnRequestJob_Click()
     cbType = SELL
         
     '시작일자, 표시형식(yyyyMMdd)
-    SDate = "20160901"
+    SDate = "20180101"
     
     '종료일자, 표시형식(yyyyMMdd)
-    EDate = "20161031"
+    EDate = "20180820"
         
     jobID = htCashbillService.RequestJob(txtCorpNum.Text, cbType, SDate, EDate)
     
@@ -1083,7 +1083,7 @@ Private Sub btnSearch_Click()
     
     cashbillList.Clear
     
-    cashbillList.AddItem "구분 | 매입/매출 | 거래일시 | 식별번호 | 공급가액 | 세액 | 봉사료 | 거래금액 | 문서형태 | 국세청승인번호", 0
+    cashbillList.AddItem "구분 | 매입/매출 | 거래일시 | 거래일자 | 식별번호 | 공급가액 | 세액 | 봉사료 | 거래금액 | 문서형태 | 국세청승인번호", 0
     
     For Each cbInfo In SearchList.list
         ' 추가적인 현금영수증 항목은 [홈택스 현금영수증 연계 API 연동매뉴얼 > 4.1.응답전문 구성] 을 참조하시기 바랍니다.'
@@ -1091,6 +1091,7 @@ Private Sub btnSearch_Click()
         rowTmp = cbInfo.tradeUsage + " | "
         rowTmp = rowTmp + cbInfo.invoiceType + " | "
         rowTmp = rowTmp + cbInfo.tradeDT + " | "
+        rowTmp = rowTmp + cbInfo.tradeDate + " | "
         rowTmp = rowTmp + cbInfo.identityNum + " | "
         rowTmp = rowTmp + cbInfo.supplyCost + " | "
         rowTmp = rowTmp + cbInfo.tax + " | "
