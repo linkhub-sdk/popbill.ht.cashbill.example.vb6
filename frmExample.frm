@@ -19,7 +19,7 @@ Begin VB.Form frmExample
       Begin VB.Frame Frame12 
          Caption         =   "홈택스 인증관련 기능"
          Height          =   2415
-         Left            =   8280
+         Left            =   8400
          TabIndex        =   41
          Top             =   360
          Width           =   5895
@@ -33,7 +33,7 @@ Begin VB.Form frmExample
          End
          Begin VB.CommandButton btnCheckLoginDeptUser 
             Caption         =   "부서사용자 로그인 테스트"
-            Height          =   375
+            Height          =   410
             Left            =   3000
             TabIndex        =   47
             Top             =   840
@@ -41,7 +41,7 @@ Begin VB.Form frmExample
          End
          Begin VB.CommandButton btnCheckDeptUser 
             Caption         =   "부서사용자 등록정보 확인"
-            Height          =   375
+            Height          =   410
             Left            =   3000
             TabIndex        =   46
             Top             =   360
@@ -50,7 +50,7 @@ Begin VB.Form frmExample
          Begin VB.CommandButton btnRegistDeptUser 
             Caption         =   "부서사용자 계정등록"
             Height          =   375
-            Left            =   240
+            Left            =   3000
             TabIndex        =   45
             Top             =   1800
             Width           =   2535
@@ -96,15 +96,15 @@ Begin VB.Form frmExample
       End
       Begin VB.Frame Frame9 
          Caption         =   "부가기능"
-         Height          =   2415
+         Height          =   1935
          Left            =   5280
          TabIndex        =   28
          Top             =   360
-         Width           =   2775
+         Width           =   2895
          Begin VB.CommandButton btnGetFlatRatePopUpURL 
             Caption         =   "정액제 서비스 신청 URL"
             Height          =   410
-            Left            =   120
+            Left            =   160
             TabIndex        =   30
             Top             =   360
             Width           =   2535
@@ -112,7 +112,7 @@ Begin VB.Form frmExample
          Begin VB.CommandButton btnGetFlatRateState 
             Caption         =   "정액제 서비스 상태 확인"
             Height          =   410
-            Left            =   120
+            Left            =   160
             TabIndex        =   29
             Top             =   840
             Width           =   2535
