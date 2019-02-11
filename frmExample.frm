@@ -92,7 +92,7 @@ Begin VB.Form frmExample
          Left            =   240
          TabIndex        =   31
          Top             =   3480
-         Width           =   10935
+         Width           =   16335
       End
       Begin VB.Frame Frame9 
          Caption         =   "부가기능"
@@ -227,7 +227,7 @@ Begin VB.Form frmExample
       Height          =   315
       Left            =   6120
       TabIndex        =   1
-      Text            =   "testkorea"
+      Text            =   "testkorea_linkhub"
       Top             =   120
       Width           =   1935
    End
@@ -235,7 +235,7 @@ Begin VB.Form frmExample
       Height          =   315
       Left            =   2400
       TabIndex        =   0
-      Text            =   "1234567890"
+      Text            =   "6798700433"
       Top             =   135
       Width           =   1935
    End
@@ -410,18 +410,20 @@ Attribute VB_Exposed = False
 ' 팝빌 홈택스 현금영수증 매입매출 API VB 6.0 SDK Example
 '
 ' - VB6 SDK 연동환경 설정방법 안내 : http://blog.linkhub.co.kr/569/
-' - 업데이트 일자 : 2018-11-21
+' - 업데이트 일자 : 2019-02-11
 ' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991
 ' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
 ' <테스트 연동개발 준비사항>
-' 1) 29, 32번 라인에 선언된 링크아이디(LinkID)와 비밀키(SecretKey)를
+' 1) 31, 34번 라인에 선언된 링크아이디(LinkID)와 비밀키(SecretKey)를
 '    링크허브 가입시 메일로 발급받은 인증정보를 참조하여 변경합니다.
 ' 2) 팝빌 개발용 사이트(test.popbill.com)에 연동회원으로 가입합니다.
-' 3) 홈택스에서 이용가능한 공인인증서를 등록합니다.
-'    - 팝빌로그인 > [홈택스연계] > [환경설정] > [공인인증서 관리] 메뉴
-'    - 공인인증서 등록(GetCertificatePopUpURL API) 반환된 URL을 이용하여
-'      팝업 페이지에서 공인인증서 등록
+' 3) 홈택스 연동서비스를 이용하기 위해 팝빌에 인증정보를 등록 합니다. (인증방법은 부서사용자 인증 / 공인인증서 인증 방식이 있습니다.)
+'    - 팝빌로그인 > [홈택스연동] > [환경설정] > [인증 관리] 메뉴에서 [홈택스 부서사용자 등록] 혹은
+'      [홈택스 공인인증서 등록]을 통해 인증정보를 등록합니다.
+'    - 홈택스연동 인증 관리 팝업 URL(GetCertificatePopUpURL API) 반환된 URL에 접속 하여
+'      [홈택스 부서사용자 등록] 혹은 [홈택스 공인인증서 등록]을 통해 인증정보를 등록합니다.
+
 '=========================================================================
 
 Option Explicit
@@ -438,64 +440,13 @@ Private Const linkID = "TESTER"
 '비밀키. 유출에 주의하시기 바랍니다.
 Private Const SecretKey = "SwWxqU+0TErBXy/9TVjIPEnI0VTUMMSQZtJf3Ed8q3I="
 
+'홈택스 현금영수증 연동 클래스 선언
 Private htCashbillService As New PBHTCashbillService
 
 '=========================================================================
-' 팝빌에 등록된 공인인증서의 홈택스 로그인을 테스트한다.
-'=========================================================================
-
-Private Sub btnCheckCertValidation_Click()
-    Dim Response As PBResponse
-    
-    Set Response = htCashbillService.CheckCertValidation(txtCorpNum.Text)
-    
-    If Response Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
-End Sub
-
-'=========================================================================
-' 팝빌에 등록된 현금영수증 부서사용자 아이디를 확인합니다.
-'=========================================================================
-
-Private Sub btnCheckDeptUser_Click()
-    Dim Response As PBResponse
-    
-    Set Response = htCashbillService.CheckDeptUser(txtCorpNum.Text)
-    
-    If Response Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
-End Sub
-
-'=========================================================================
-' 팝빌 회원아이디 중복여부를 확인합니다.
-'=========================================================================
-
-Private Sub btnCheckID_Click()
-    Dim Response As PBResponse
-    
-    Set Response = htCashbillService.CheckID(txtUserID.Text)
-    
-    If Response Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
-End Sub
-
-'=========================================================================
-' 해당 사업자의 파트너 연동회원 가입여부를 확인합니다.
+' 파트너의 연동회원으로 가입된 사업자번호인지 확인합니다.
 ' - LinkID는 인증정보로 설정되어 있는 링크아이디 값입니다.
 '=========================================================================
-
 Private Sub btnCheckIsMember_Click()
     Dim Response As PBResponse
     
@@ -510,13 +461,12 @@ Private Sub btnCheckIsMember_Click()
 End Sub
 
 '=========================================================================
-' 팝빌에 등록된 현금영수증 부서사용자 계정정보를 이용하여 홈택스 로그인을 테스트합니다.
+' 팝빌 회원아이디 중복여부를 확인합니다.
 '=========================================================================
-
-Private Sub btnCheckLoginDeptUser_Click()
+Private Sub btnCheckID_Click()
     Dim Response As PBResponse
     
-    Set Response = htCashbillService.CheckLoginDeptUser(txtCorpNum.Text)
+    Set Response = htCashbillService.CheckID(txtUserID.Text)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
@@ -527,13 +477,55 @@ Private Sub btnCheckLoginDeptUser_Click()
 End Sub
 
 '=========================================================================
-'  팝빌에 등록된 현금영수증 부서사용자 계정정보를 삭제합니다.
+' 팝빌 연동회원 가입을 요청합니다.
 '=========================================================================
-
-Private Sub btnDeleteDeptUser_Click()
+Private Sub btnJoinMember_Click()
+    Dim joinData As New PBJoinForm
     Dim Response As PBResponse
     
-    Set Response = htCashbillService.DeleteDeptUser(txtCorpNum.Text)
+    '아이디, 6자이상 50자 미만
+    joinData.id = "userid"
+    
+    '비밀번호, 6자이상 20자 미만
+    joinData.pwd = "pwd_must_be_long_enough"
+    
+    '파트너링크 아이디
+    joinData.linkID = linkID
+    
+    '사업자번호, '-'제외, 10자리
+    joinData.CorpNum = "1234567890"
+    
+    '대표자성명, 최대 100자
+    joinData.ceoname = "대표자성명"
+    
+    '상호명, 최대 200자
+    joinData.corpName = "회원상호"
+    
+    '사업장 주소, 최대 300자
+    joinData.addr = "주소"
+    
+    '업태, 최대 100자
+    joinData.bizType = "업태"
+    
+    '종목, 최대 100자
+    joinData.bizClass = "종목"
+
+    '담당자 성명, 최대 100자
+    joinData.ContactName = "담당자성명"
+    
+    '담당자 이메일, 최대 100자
+    joinData.ContactEmail = "test@test.com"
+    
+    '담당자 연락처, 최대 20자
+    joinData.ContactTEL = "02-999-9999"
+    
+    '담당자 휴대폰번호, 최대 20자
+    joinData.ContactHP = "010-1234-5678"
+    
+    '담당자 팩스번호, 최대 20자
+    joinData.ContactFAX = "02-999-9998"
+    
+    Set Response = htCashbillService.JoinMember(joinData)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
@@ -543,66 +535,9 @@ Private Sub btnDeleteDeptUser_Click()
     MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
 End Sub
 
-
-
 '=========================================================================
-' 연동회원의 잔여포인트를 확인합니다.
-' - 과금방식이 파트너과금인 경우 파트너 잔여포인트(GetPartnerBalance API)
-'   를 통해 확인하시기 바랍니다.
+' 연동회원의 홈택스 현금영수증 연동 API 서비스 과금정보를 확인합니다.
 '=========================================================================
-
-Private Sub btnGetBalance_Click()
-    Dim balance As Double
-    
-    balance = htCashbillService.GetBalance(txtCorpNum.Text)
-    
-    If balance < 0 Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox "잔여포인트 : " + CStr(balance)
-End Sub
-
-'=========================================================================
-' 등록된 홈택스 공인인증서의 만료일자를 확인합니다.
-'=========================================================================
-
-Private Sub btnGetCertificateExpireDate_Click()
-    Dim expireDate As String
-    
-    expireDate = htCashbillService.GetCertificateExpireDate(txtCorpNum.Text)
-    
-    If expireDate = "" Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox "인증서만료일 : " + expireDate
-End Sub
-
-'=========================================================================
-' 홈택스 공인인증서 등록 팝업 URL을 반환합니다.
-' - 반환된 URL은 보안정책에 따라 30초의 유효시간을 갖습니다.
-'=========================================================================
-
-Private Sub btnGetCertificatePopUpURL_Click()
-    Dim url As String
-    
-    url = htCashbillService.GetCertificatePopUpURL(txtCorpNum.Text)
-    
-    If url = "" Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox "URL : " + vbCrLf + url
-End Sub
-
-'=========================================================================
-' 연동회원의 홈택스 현금영수증 연계 API 서비스 과금정보를 확인합니다.
-'=========================================================================
-
 Private Sub btnGetChargeInfo_Click()
     Dim ChargeInfo As PBChargeInfo
     Dim tmp As String
@@ -621,12 +556,137 @@ Private Sub btnGetChargeInfo_Click()
     MsgBox tmp
 End Sub
 
+'=========================================================================
+' 팝빌(www.popbill.com)에 로그인된 팝빌 URL을 반환합니다.
+' - 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
+'=========================================================================
+Private Sub btnGetAccessURL_Click()
+    Dim url As String
+           
+    url = htCashbillService.GetAccessURL(txtCorpNum.Text, txtUserID.Text)
+    
+    If url = "" Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "URL : " + vbCrLf + url
+End Sub
 
+'=========================================================================
+' 연동회원의 담당자를 신규로 등록합니다.
+'=========================================================================
+Private Sub btnRegistContact_Click()
+    Dim joinData As New PBContactInfo
+    Dim Response As PBResponse
+    
+    '담당자 아이디, 6자 이상 50자 미만
+    joinData.id = "testkorea"
+    
+    '비밀번호, 6자 이상 20자 미만
+    joinData.pwd = "test@test.com"
+    
+    '담당자명, 최대 100자
+    joinData.personName = "담당자명"
+    
+    '담당자 연락처, 최대 20자
+    joinData.tel = "070-1234-1234"
+    
+    '담당자 휴대폰번호, 최대 20자
+    joinData.hp = "010-1234-1234"
+    
+    '담당자 팩스번,최대 20자
+    joinData.fax = "070-1234-1234"
+    
+    '담당자 메일주소, 최대 100자
+    joinData.email = "test@test.com"
+    
+    '회사조회 권한여부, True-회사조회 / False-개인조회
+    joinData.searchAllAllowYN = True
+    
+    '관리자 여부, True-관리자 / False-사용자
+    joinData.mgrYN = False
+        
+    Set Response = htCashbillService.RegistContact(txtCorpNum.Text, joinData)
+    
+    If Response Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
+End Sub
+
+'=========================================================================
+' 연동회원의 담당자 목록을 확인합니다.
+'=========================================================================
+Private Sub btnListContact_Click()
+    Dim resultList As Collection
+    Dim info As PBContactInfo
+    Dim tmp As String
+    
+    Set resultList = htCashbillService.ListContact(txtCorpNum.Text)
+     
+    If resultList Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    tmp = "id(아이디) | personName(성명) | email(이메일) | hp(휴대폰번호) |  fax(팩스번호) | tel(연락처) | " _
+         + "regDT(등록일시) | searchAllAllowYN(회사조회 권한여부) | mgrYN(관리자 여부) | state(상태) " + vbCrLf
+    
+    For Each info In resultList
+        tmp = tmp + info.id + " | " + info.personName + " | " + info.email + " | " + info.hp + " | " + info.fax _
+        + info.tel + " | " + info.regDT + " | " + CStr(info.searchAllAllowYN) + " | " + CStr(info.mgrYN) + " | " + CStr(info.state) + vbCrLf
+    Next
+    
+    MsgBox tmp
+End Sub
+
+'=========================================================================
+' 연동회원의 담당자 정보를 수정합니다.
+'=========================================================================
+Private Sub btnUpdateContact_Click()
+    Dim joinData As New PBContactInfo
+    Dim Response As PBResponse
+    
+    '담당자 아이디
+    joinData.id = txtUserID.Text
+    
+    '담당자 성명, 최대 100자
+    joinData.personName = "담당자명_수정"
+    
+    '담당자 연락처, 최대 20자
+    joinData.tel = "070-1234-1234"
+    
+    '담당자 휴대폰번호, 최대 20자
+    joinData.hp = "010-1234-1234"
+        
+    '담당자 팩스번호, 최대 20자
+    joinData.fax = "070-1234-1234"
+    
+    '담당자 이메일, 최대 100자
+    joinData.email = "test@test.com"
+
+    '회사조회 권한여부, True-회사조회 / False-개인조회
+    joinData.searchAllAllowYN = True
+    
+    '관리자 여부, True-관리자 / False-사용자
+    joinData.mgrYN = False
+                
+    Set Response = htCashbillService.UpdateContact(txtCorpNum.Text, joinData, txtUserID.Text)
+    
+    If Response Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
+End Sub
 
 '=========================================================================
 ' 연동회원의 회사정보를 확인합니다.
 '=========================================================================
-
 Private Sub btnGetCorpInfo_Click()
     Dim CorpInfo As PBCorpInfo
     Dim tmp As String
@@ -638,25 +698,73 @@ Private Sub btnGetCorpInfo_Click()
         Exit Sub
     End If
     
-    tmp = tmp + "ceoname(대표자성명) : " + CorpInfo.ceoname + vbCrLf
-    tmp = tmp + "corpName(상호명) : " + CorpInfo.corpName + vbCrLf
-    tmp = tmp + "addr(주소) : " + CorpInfo.addr + vbCrLf
-    tmp = tmp + "bizType(업태) : " + CorpInfo.bizType + vbCrLf
-    tmp = tmp + "bizClass(종목) : " + CorpInfo.bizClass + vbCrLf
+    tmp = tmp + "ceoname (대표자명) : " + CorpInfo.ceoname + vbCrLf
+    tmp = tmp + "corpName (상호) : " + CorpInfo.corpName + vbCrLf
+    tmp = tmp + "addr (주소) : " + CorpInfo.addr + vbCrLf
+    tmp = tmp + "bizType (업태) : " + CorpInfo.bizType + vbCrLf
+    tmp = tmp + "bizClass (종목) : " + CorpInfo.bizClass + vbCrLf
     
     MsgBox tmp
-    
 End Sub
 
 '=========================================================================
-' 정액제 신청 팝업 URL을 반환합니다.
-' - 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
+' 연동회원의 회사정보를 수정합니다
 '=========================================================================
-
-Private Sub btnGetFlatRatePopUpURL_Click()
-    Dim url As String
+Private Sub btnUpdateCorpInfo_Click()
+    Dim CorpInfo As New PBCorpInfo
+    Dim Response As PBResponse
     
-    url = htCashbillService.GetFlatRatePopUpURL(txtCorpNum.Text)
+    '대표자명, 최대 100자
+    CorpInfo.ceoname = "대표자"
+    
+    '상호, 최대 200자
+    CorpInfo.corpName = "상호"
+    
+    '주소, 최대 300자
+    CorpInfo.addr = "서울특별시"
+    
+    '업태, 최대 100자
+    CorpInfo.bizType = "업태"
+    
+    '종목, 최대 100자
+    CorpInfo.bizClass = "종목"
+    
+    Set Response = htCashbillService.UpdateCorpInfo(txtCorpNum.Text, CorpInfo)
+    
+    If Response Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
+End Sub
+
+'=========================================================================
+' 연동회원의 잔여포인트를 확인합니다.
+' - 과금방식이 파트너과금인 경우 파트너 잔여포인트(GetPartnerBalance API)
+'   를 통해 확인하시기 바랍니다.
+'=========================================================================
+Private Sub btnGetBalance_Click()
+    Dim balance As Double
+    
+    balance = htCashbillService.GetBalance(txtCorpNum.Text)
+    
+    If balance < 0 Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "연동회원 잔여포인트 : " + CStr(balance)
+End Sub
+
+'=========================================================================
+' 연동회원 포인트 충전 URL을 반환합니다.
+' - URL 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
+'=========================================================================
+Private Sub btnGetChargeURL_Click()
+    Dim url As String
+           
+    url = htCashbillService.GetChargeURL(txtCorpNum.Text, txtUserID.Text)
     
     If url = "" Then
         MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
@@ -667,39 +775,78 @@ Private Sub btnGetFlatRatePopUpURL_Click()
 End Sub
 
 '=========================================================================
-' 연동회원의 정액제 서비스 이용상태를 확인합니다.
+' 파트너 잔여포인트를 확인합니다.
+' - 과금방식이 연동과금인 경우 연동회원 잔여포인트(GetPartnerBalance API)
+'   를 통해 확인하시기 바랍니다.
 '=========================================================================
-
-Private Sub btnGetFlatRateState_Click()
-    Dim flatRateInfo As PBHTCashbillFlatRate
-    Dim tmp As String
+Private Sub btnGetPartnerBalance_Click()
+    Dim balance As Double
     
-    Set flatRateInfo = htCashbillService.GetFlatRateState(txtCorpNum.Text)
-     
-    If flatRateInfo Is Nothing Then
+    balance = htCashbillService.GetPartnerBalance(txtCorpNum.Text)
+    
+    If balance < 0 Then
         MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
     End If
     
-    tmp = tmp + "referencdeID (사업자번호) : " + flatRateInfo.referenceID + vbCrLf
-    tmp = tmp + "contractDT (정액제 서비스 시작일시) : " + flatRateInfo.contractDT + vbCrLf
-    tmp = tmp + "useEndDate (정액제 서비스 종료일) : " + flatRateInfo.useEndDate + vbCrLf
-    tmp = tmp + "baseDate (자동연장 결제일) : " + CStr(flatRateInfo.baseDate) + vbCrLf
-    tmp = tmp + "state (정액제 서비스 상태) : " + CStr(flatRateInfo.state) + vbCrLf
-    tmp = tmp + "closeRequestYN (서비스 해지신청 여부) : " + CStr(flatRateInfo.closeRequestYN) + vbCrLf
-    tmp = tmp + "useRestrictYN (서비스 사용제한 여부) : " + CStr(flatRateInfo.useRestrictYN) + vbCrLf
-    tmp = tmp + "closeOnExpired (서비스만료시 해지여부 ) : " + CStr(flatRateInfo.closeOnExpired) + vbCrLf
-    tmp = tmp + "unPaidYN (미수금 보유 여부) : " + CStr(flatRateInfo.unPaidYN) + vbCrLf
-    
-    MsgBox tmp
+    MsgBox "파트너 잔여포인트 : " + CStr(balance)
 End Sub
 
 '=========================================================================
-' 수집 요청 상태를 확인합니다.
-' - 응답항목 관한 정보는 "[홈택스 현금영수증 연계 API 연동매뉴얼
-'   > 3.2.2. GetJobState (수집 상태 확인)" 을 참고하시기 바랍니다 .
+' 파트너 포인트 충전 URL을 반환합니다.
+' - URL 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
 '=========================================================================
+Private Sub btnGetPartnerURL_CHRG_Click()
+    Dim url As String
+           
+    url = htCashbillService.GetPartnerURL(txtCorpNum.Text, "CHRG")
+    
+    If url = "" Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "URL : " + vbCrLf + url
+End Sub
 
+'=========================================================================
+'현금영수증 매출/매입 내역 수집을 요청합니다
+'- 홈택스연동 프로세스는 "[홈택스연동(현금영수증) API 연동매뉴얼] >
+'  1.1. 홈택스연동(현금영수증) API 구성" 을 참고하시기 바랍니다.
+'- 수집 요청후 반환받은 작업아이디(JobID)의 유효시간은 1시간 입니다.
+'=========================================================================
+Private Sub btnRequestJob_Click()
+    Dim jobID As String
+    Dim SDate As String
+    Dim EDate As String
+    Dim cbType As KeyType
+    
+    '현금영수증 유형, SELL-매출, BUY-매입, TURSTEE-위수탁
+    cbType = BUY
+        
+    '시작일자, 표시형식(yyyyMMdd)
+    SDate = "20180601"
+    
+    '종료일자, 표시형식(yyyyMMdd)
+    EDate = "20190201"
+    
+    jobID = htCashbillService.RequestJob(txtCorpNum.Text, cbType, SDate, EDate)
+    
+    If jobID = "" Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "jobID(작업아이디) : " + jobID + vbCrLf
+        
+    txtJobID.Text = jobID
+End Sub
+
+'=========================================================================
+'수집 요청 상태를 확인합니다.
+'- 응답항목 관한 정보는 "[홈택스연동 (현금영수증) API 연동매뉴얼] >
+'  3.1.2. GetJobState(수집 상태 확인)" 을 참고하시기 바랍니다.
+'=========================================================================
 Private Sub btnGetJobState_Click()
     Dim jobInfo As PBHTCashbillJobState
     Dim tmp As String
@@ -728,126 +875,11 @@ Private Sub btnGetJobState_Click()
 End Sub
 
 '=========================================================================
-' 파트너의 잔여포인트를 확인합니다.
-' - 과금방식이 연동과금인 경우 연동회원 잔여포인트(GetBalance API)를
-'   이용하시기 바랍니다.
+'수집 요청건들에 대한 상태 목록을 확인합니다.
+'- 수집 요청 작업아이디(JobID)의 유효시간은 1시간 입니다.
+'- 응답항목에 관한 정보는 "[홈택스연동 (현금영수증) API 연동매뉴얼] >
+'  3.1.3. ListActiveJob(수집 상태 목록 확인)" 을 참고하시기 바랍니다.
 '=========================================================================
-
-Private Sub btnGetPartnerBalance_Click()
-    Dim balance As Double
-    
-    balance = htCashbillService.GetPartnerBalance(txtCorpNum.Text)
-    
-    If balance < 0 Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox "잔여포인트 : " + CStr(balance)
-End Sub
-
-'=========================================================================
-' 파트너 포인트 충전 URL을 반환합니다.
-' - 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
-'=========================================================================
-
-Private Sub btnGetPartnerURL_CHRG_Click()
-    Dim url As String
-    
-    url = htCashbillService.GetPartnerURL(txtCorpNum.Text, "CHRG")
-    
-    If url = "" Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox "URL : " + vbCrLf + url
-End Sub
-
-'=========================================================================
-' 팝빌(www.popbill.com)에 로그인된 팝빌 URL을 반환합니다.
-' - 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
-'=========================================================================
-Private Sub btnGetAccessURL_Click()
-    Dim url As String
-    
-    url = htCashbillService.GetAccessURL(txtCorpNum.Text, txtUserID.Text)
-    
-    If url = "" Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox "URL : " + vbCrLf + url
-End Sub
-
-'=========================================================================
-' 팝빌 연동회원 가입을 요청합니다.
-'=========================================================================
-
-Private Sub btnJoinMember_Click()
-    Dim joinData As New PBJoinForm
-    Dim Response As PBResponse
-    
-    '링크 아이디
-    joinData.linkID = linkID
-    
-    '사업자번호, '-'제외, 10자리
-    joinData.CorpNum = "1231212312"
-    
-    '대표자성명, 최대 30자
-    joinData.ceoname = "대표자성명"
-    
-    '상호명, 최대 70자
-    joinData.corpName = "회원상호"
-    
-    '주소, 최대 300자
-    joinData.addr = "주소"
-    
-    '업태, 최대 40자
-    joinData.bizType = "업태"
-    
-    '종목, 최대 40자
-    joinData.bizClass = "종목"
-    
-    '아이디, 6자이상 20자 미만
-    joinData.id = "userid"
-    
-    '비밀번호, 6자이상 20자 미만
-    joinData.pwd = "pwd_must_be_long_enough"
-    
-    '담당자명, 최대 30자
-    joinData.ContactName = "담당자성명"
-    
-    '담당자 연락처, 최대 20자
-    joinData.ContactTEL = "02-999-9999"
-    
-    '담당자 휴대폰번호, 최대 20자
-    joinData.ContactHP = "010-1234-5678"
-    
-    '담당자 팩스번호, 최대 20자
-    joinData.ContactFAX = "02-999-9998"
-    
-    '담당자 메일, 최대 70자
-    joinData.ContactEmail = "test@test.com"
-    
-    Set Response = htCashbillService.JoinMember(joinData)
-    
-    If Response Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
-End Sub
-
-'=========================================================================
-' 수집 요청건들에 대한 상태 목록을 확인합니다.
-' - 수집 요청 작업아이디(JobID)의 유효시간은 1시간 입니다.
-' - 응답항목에 관한 정보는 "[홈택스 현금영수증 연계 API 연동매뉴얼]
-'   > 3.2.3. ListActiveJob (수집 상태 목록 확인)" 을 참고하시기 바랍니다.
-'=========================================================================
-
 Private Sub btnListActiveJob_Click()
     Dim jobList As Collection
     Dim tmp As String
@@ -861,7 +893,8 @@ Private Sub btnListActiveJob_Click()
     End If
     
     tmp = tmp + "작업아이디(jobID)의 유효시간은 1시간입니다" + vbCrLf + vbCrLf
-    tmp = tmp + "jobID | jobState | queryType | queryDateType | queryStDate | queryEnDate | errorCode | errorReason | jobStartDT | jobEndDT | collectCount | regDT " + vbCrLf
+    tmp = tmp + "jobID(작업아이디) | jobState(수집상태) | queryType(수집유형) | queryDateType(일자유형) | queryStDate(시작일자) | queryEnDate(종료일자) |" _
+            + "errorCode(오류코드) | errorReason(오류메시지) | jobStartDT(작업 시작일시) | jobEndDT(작업 종료일시) | collectCount(수집개수) | regDT(수집 요청일시) " + vbCrLf
     
     For Each info In jobList
         tmp = tmp + CStr(info.jobID) + " | "
@@ -887,158 +920,10 @@ Private Sub btnListActiveJob_Click()
 End Sub
 
 '=========================================================================
-' 연동회원의 담당자 목록을 확인합니다.
+'검색조건을 사용하여 수집결과를 조회합니다.
+'- 응답항목에 관한 정보는 "[홈택스연동 (현금영수증) API 연동매뉴얼] >
+'  3.2.1. Search(수집 결과 조회)" 을 참고하시기 바랍니다.
 '=========================================================================
-
-Private Sub btnListContact_Click()
-    Dim resultList As Collection
-    Dim tmp As String
-    Dim info As PBContactInfo
-    
-    Set resultList = htCashbillService.ListContact(txtCorpNum.Text)
-     
-    If resultList Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    tmp = "id | email | hp | personName | searchAllAllowYN | tel | fax | mgrYN | regDT | state" + vbCrLf
-    
-    For Each info In resultList
-        tmp = tmp + info.id + " | " + info.email + " | " + info.hp + " | " + info.personName + " | " + CStr(info.searchAllAllowYN) _
-                + info.tel + " | " + info.fax + " | " + CStr(info.mgrYN) + " | " + info.regDT + " | " + CStr(info.state) + vbCrLf
-    Next
-    
-    MsgBox tmp
-End Sub
-
-'=========================================================================
-' 연동회원 포인트 충전 URL을 반환합니다.
-' - URL 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
-'=========================================================================
-Private Sub btnGetChargeURL_Click()
-    Dim url As String
-    
-    url = htCashbillService.GetChargeURL(txtCorpNum.Text, txtUserID.Text)
-    
-    If url = "" Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox "URL : " + vbCrLf + url
-End Sub
-
-'=========================================================================
-' 연동회원의 담당자를 신규로 등록합니다.
-'=========================================================================
-
-Private Sub btnRegistContact_Click()
-    Dim joinData As New PBContactInfo
-    Dim Response As PBResponse
-    
-    '담당자 아이디, 6자 이상 20자 미만
-    joinData.id = "testkorea_20161011"
-    
-    '비밀번호, 6자 이상 20자 미만
-    joinData.pwd = "test@test.com"
-    
-    '담당자명, 최대 30자
-    joinData.personName = "담당자명"
-    
-    '담당자 연락처
-    joinData.tel = "070-1234-1234"
-    
-    '담당자 휴대폰번호
-    joinData.hp = "010-1234-1234"
-    
-    '담당자 메일주소
-    joinData.email = "test@test.com"
-    
-    '담당자 팩스번호
-    joinData.fax = "070-1234-1234"
-    
-    '회사조회 권한여부, true-회사조회 / false-개인조회
-    joinData.searchAllAllowYN = True
-    
-    '관리자 권한여부
-    joinData.mgrYN = False
-        
-    Set Response = htCashbillService.RegistContact(txtCorpNum.Text, joinData)
-    
-    If Response Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
-End Sub
-
-'=========================================================================
-' 홈택스 현금영수증 부서사용자 계정을 등록합니다.
-'=========================================================================
-
-Private Sub btnRegistDeptUser_Click()
-    Dim Response As PBResponse
-    Dim DeptUserID As String
-    Dim DeptUserPWD As String
-    
-    '홈택스에서 생성한 현금영수증 부서사용자 아이디
-    DeptUserID = "userid_test"
-    
-    '홈택스에서 생성한 현금영수증 부서사용자 비밀번호
-    DeptUserPWD = "passwd_test"
-    
-    Set Response = htCashbillService.RegistDeptUser(txtCorpNum.Text, DeptUserID, DeptUserPWD)
-    
-    If Response Is Nothing Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
-End Sub
-
-'=========================================================================
-' 현금영수증 매출/매입 내역 수집을 요청합니다
-' - 매출/매입 연계 프로세스는 "[홈택스 현금영수증 연계 API 연동매뉴얼]
-'   > 1.2. 프로세스 흐름도" 를 참고하시기 바랍니다.
-' - 수집 요청후 반환받은 작업아이디(JobID)의 유효시간은 1시간 입니다.
-'=========================================================================
-
-Private Sub btnRequestJob_Click()
-    Dim jobID As String
-    Dim SDate As String
-    Dim EDate As String
-    Dim cbType As KeyType
-    
-    '현금영수증 유형, SELL-매출, BUY-매입, TURSTEE-위수탁
-    cbType = SELL
-        
-    '시작일자, 표시형식(yyyyMMdd)
-    SDate = "20180101"
-    
-    '종료일자, 표시형식(yyyyMMdd)
-    EDate = "20180820"
-        
-    jobID = htCashbillService.RequestJob(txtCorpNum.Text, cbType, SDate, EDate)
-    
-    If jobID = "" Then
-        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox "jobID(작업아이디) : " + jobID + vbCrLf
-    
-    txtJobID.Text = jobID
-End Sub
-
-'=========================================================================
-' 검색조건을 사용하여 수집결과를 조회합니다.
-' - 응답항목에 관한 정보는 "[홈택스 현금영수증 연계 API 연동매뉴얼]
-'   > 3.3.1. Search (수집 결과 조회)" 을 참고하시기 바랍니다.
-'=========================================================================
-
 Private Sub btnSearch_Click()
     Dim SearchList As PBHTCashbillSearch
     Dim cbType As New Collection
@@ -1049,7 +934,6 @@ Private Sub btnSearch_Click()
     Dim order As String
     Dim tmp As String
     Dim rowTmp As String
-    Dim cbInfo As PBHTCashbill
     
     '현금영수증 형태 배열, N-일반현금영수증, C-취소현금영수증
     tradeType.Add "N"
@@ -1067,10 +951,9 @@ Private Sub btnSearch_Click()
     
     '정렬 방향, D-내림차순, A-오름차순
     order = "D"
-        
+
     Set SearchList = htCashbillService.Search(txtCorpNum.Text, txtJobID.Text, tradeType, tradeUsage, page, perPage, order)
     
-        
     If SearchList Is Nothing Then
         MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
@@ -1085,36 +968,44 @@ Private Sub btnSearch_Click()
     
     cashbillList.Clear
     
-    cashbillList.AddItem "구분 | 매입/매출 | 거래일시 | 거래일자 | 식별번호 | 공급가액 | 세액 | 봉사료 | 거래금액 | 문서형태 | 국세청승인번호", 0
-    
+    cashbillList.AddItem "ntsconfirmNum (국세청승인번호) | tradeDate (거래일자) | tradeDT (거래일시) | tradeType (문서형태) | tradeUsage (거래구분) | totalAmount (거래금액)", 0
+    cashbillList.AddItem "supplyCost (공급가액) | tax (부가세) | serviceFee (봉사료) | invoiceType (매입/매출) | franchiseCorpNum (발행자 사업자번호) ", 1
+    cashbillList.AddItem "franchiseCorpName (발행자 상호) | franchiseCorpType (발행자 사업자유형) | identityNum (거래처 식별번호) | identityNumType (식별번호유형)", 2
+    cashbillList.AddItem "customerName (고객명) | cardOwnerName (카드소유자명) | deductionType (공제유형)", 3
+
+    Dim cbInfo As PBHTCashbill
+           
     For Each cbInfo In SearchList.list
-        ' 추가적인 현금영수증 항목은 [홈택스 현금영수증 연계 API 연동매뉴얼 > 4.1.응답전문 구성] 을 참조하시기 바랍니다.'
         rowTmp = ""
-        rowTmp = cbInfo.tradeUsage + " | "
-        rowTmp = rowTmp + cbInfo.invoiceType + " | "
-        rowTmp = rowTmp + cbInfo.tradeDT + " | "
+        rowTmp = cbInfo.ntsconfirmNum + " | "
         rowTmp = rowTmp + cbInfo.tradeDate + " | "
-        rowTmp = rowTmp + cbInfo.identityNum + " | "
+        rowTmp = rowTmp + cbInfo.tradeDT + " | "
+        rowTmp = rowTmp + cbInfo.tradeType + " | "
+        rowTmp = rowTmp + cbInfo.tradeUsage + " | "
+        rowTmp = rowTmp + cbInfo.totalAmount + " | "
         rowTmp = rowTmp + cbInfo.supplyCost + " | "
         rowTmp = rowTmp + cbInfo.tax + " | "
         rowTmp = rowTmp + cbInfo.serviceFee + " | "
-        rowTmp = rowTmp + cbInfo.totalAmount + " | "
-        rowTmp = rowTmp + cbInfo.tradeType + " | "
-        rowTmp = rowTmp + cbInfo.ntsconfirmNum
-        
+        rowTmp = rowTmp + cbInfo.invoiceType + " | "
+        rowTmp = rowTmp + cbInfo.franchiseCorpNum + " | "
+        rowTmp = rowTmp + cbInfo.franchiseCorpName + " | "
+        rowTmp = rowTmp + cbInfo.franchiseCorpType + " | "
+        rowTmp = rowTmp + cbInfo.identityNum + " | "
+        rowTmp = rowTmp + cbInfo.franchiseCorpName + " | "
+        rowTmp = rowTmp + cbInfo.customerName + " | "
+        rowTmp = rowTmp + cbInfo.cardOwnerName + " | "
+        rowTmp = rowTmp + cbInfo.deductionType
         cashbillList.AddItem rowTmp, cashbillList.ListCount
-        
     Next
-    
+               
     MsgBox (tmp)
 End Sub
 
 '=========================================================================
-' 검색조건을 사용하여 수집 결과 요약정보를 조회합니다.
-' - 응답항목에 관한 정보는 "[홈택스 현금영수증 연계 API 연동매뉴얼]
-'   > 3.3.2. Summary (수집 결과 요약정보 조회)" 을 참고하시기 바랍니다.
+'현금영수증 매입/매출 내역의 수집 결과 요약정보를 조회합니다.
+'- 응답항목에 관한 정보는 "[홈택스연동 (현금영수증) API 연동매뉴얼] >
+'  3.2.2. Summary(수집 결과 요약정보 조회)" 을 참고하시기 바랍니다.
 '=========================================================================
-
 Private Sub btnSummary_Click()
     Dim summaryInfo As PBHTCashbillSummary
     Dim cbType As New Collection
@@ -1137,7 +1028,6 @@ Private Sub btnSummary_Click()
     'Summary 호출
     Set summaryInfo = htCashbillService.Summary(txtCorpNum.Text, txtJobID.Text, tradeType, tradeUsage)
     
-        
     If summaryInfo Is Nothing Then
         MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
         Exit Sub
@@ -1149,42 +1039,93 @@ Private Sub btnSummary_Click()
     tmp = tmp + "serviceFeeTotal (봉사료 합계) : " + CStr(summaryInfo.serviceFeeTotal) + vbCrLf
     tmp = tmp + "amountTotal (합계 금액) : " + CStr(summaryInfo.amountTotal) + vbCrLf
            
-            
     MsgBox (tmp)
 End Sub
 
 '=========================================================================
-' 연동회원의 담당자 정보를 수정합니다.
+' 정액제 신청 팝업 URL을 반환합니다.
+' - 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
 '=========================================================================
+Private Sub btnGetFlatRatePopUpURL_Click()
+    Dim url As String
+    
+    url = htCashbillService.GetFlatRatePopUpURL(txtCorpNum.Text)
+    
+    If url = "" Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "URL : " + vbCrLf + url
+End Sub
 
-Private Sub btnUpdateContact_Click()
-    Dim joinData As New PBContactInfo
+'=========================================================================
+' 연동회원의 정액제 서비스 이용상태를 확인합니다.
+'=========================================================================
+Private Sub btnGetFlatRateState_Click()
+    Dim flatRateInfo As PBHTCashbillFlatRate
+    Dim tmp As String
+    
+    Set flatRateInfo = htCashbillService.GetFlatRateState(txtCorpNum.Text)
+     
+    If flatRateInfo Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    tmp = tmp + "referencdeID (사업자번호) : " + flatRateInfo.referenceID + vbCrLf
+    tmp = tmp + "contractDT (정액제 서비스 시작일시) : " + flatRateInfo.contractDT + vbCrLf
+    tmp = tmp + "useEndDate (정액제 서비스 종료일) : " + flatRateInfo.useEndDate + vbCrLf
+    tmp = tmp + "baseDate (자동연장 결제일) : " + CStr(flatRateInfo.baseDate) + vbCrLf
+    tmp = tmp + "state (정액제 서비스 상태) : " + CStr(flatRateInfo.state) + vbCrLf
+    tmp = tmp + "closeRequestYN (서비스 해지신청 여부) : " + CStr(flatRateInfo.closeRequestYN) + vbCrLf
+    tmp = tmp + "useRestrictYN (서비스 사용제한 여부) : " + CStr(flatRateInfo.useRestrictYN) + vbCrLf
+    tmp = tmp + "closeOnExpired (서비스만료시 해지여부 ) : " + CStr(flatRateInfo.closeOnExpired) + vbCrLf
+    tmp = tmp + "unPaidYN (미수금 보유 여부) : " + CStr(flatRateInfo.unPaidYN) + vbCrLf
+    
+    MsgBox tmp
+End Sub
+
+'=========================================================================
+' 홈택스 공인인증서 등록 팝업 URL을 반환합니다.
+' - 반환된 URL은 보안정책에 따라 30초의 유효시간을 갖습니다.
+'=========================================================================
+Private Sub btnGetCertificatePopUpURL_Click()
+    Dim url As String
+    
+    url = htCashbillService.GetCertificatePopUpURL(txtCorpNum.Text)
+    
+    If url = "" Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "URL : " + vbCrLf + url
+End Sub
+
+'=========================================================================
+' 등록된 홈택스 공인인증서의 만료일자를 확인합니다.
+'=========================================================================
+Private Sub btnGetCertificateExpireDate_Click()
+    Dim expireDate As String
+    
+    expireDate = htCashbillService.GetCertificateExpireDate(txtCorpNum.Text)
+    
+    If expireDate = "" Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "인증서만료일 : " + expireDate
+End Sub
+
+'=========================================================================
+' 팝빌에 등록된 공인인증서의 홈택스 로그인을 테스트한다.
+'=========================================================================
+Private Sub btnCheckCertValidation_Click()
     Dim Response As PBResponse
     
-    '담당자 아이디
-    joinData.id = txtUserID.Text
-    '담당자명
-    joinData.personName = "담당자명_수정"
-    
-    '연락처
-    joinData.tel = "070-1234-1234"
-    
-    '휴대폰번호
-    joinData.hp = "010-1234-1234"
-    
-    '이메일 주소
-    joinData.email = "test@test.com"
-    
-    '팩스번호
-    joinData.fax = "070-1234-1234"
-    
-    '전체조회여부, True-회사조회, False-개인조회
-    joinData.searchAllAllowYN = True
-    
-    '관리자 권한여부
-    joinData.mgrYN = False
-                
-    Set Response = htCashbillService.UpdateContact(txtCorpNum.Text, joinData, txtUserID.Text)
+    Set Response = htCashbillService.CheckCertValidation(txtCorpNum.Text)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
@@ -1195,29 +1136,68 @@ Private Sub btnUpdateContact_Click()
 End Sub
 
 '=========================================================================
-' 연동회원의 회사정보를 수정합니다
+' 팝빌에 등록된 현금영수증 부서사용자 아이디를 확인합니다.
 '=========================================================================
-
-Private Sub btnUpdateCorpInfo_Click()
-    Dim CorpInfo As New PBCorpInfo
+Private Sub btnCheckDeptUser_Click()
     Dim Response As PBResponse
     
-    '대표자명
-    CorpInfo.ceoname = "대표자"
+    Set Response = htCashbillService.CheckDeptUser(txtCorpNum.Text)
     
-    '상호
-    CorpInfo.corpName = "상호"
+    If Response Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
     
-    '주소
-    CorpInfo.addr = "서울특별시"
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
+End Sub
+
+'=========================================================================
+' 팝빌에 등록된 현금영수증 부서사용자 계정정보를 이용하여 홈택스 로그인을 테스트합니다.
+'=========================================================================
+Private Sub btnCheckLoginDeptUser_Click()
+    Dim Response As PBResponse
     
-    '업태
-    CorpInfo.bizType = "업태"
+    Set Response = htCashbillService.CheckLoginDeptUser(txtCorpNum.Text)
     
-    '종목
-    CorpInfo.bizClass = "종목"
+    If Response Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
     
-    Set Response = htCashbillService.UpdateCorpInfo(txtCorpNum.Text, CorpInfo)
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
+End Sub
+
+'=========================================================================
+'  팝빌에 등록된 현금영수증 부서사용자 계정정보를 삭제합니다.
+'=========================================================================
+Private Sub btnDeleteDeptUser_Click()
+    Dim Response As PBResponse
+    
+    Set Response = htCashbillService.DeleteDeptUser(txtCorpNum.Text)
+    
+    If Response Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.Message)
+End Sub
+
+'=========================================================================
+' 홈택스 현금영수증 부서사용자 계정을 등록합니다.
+'=========================================================================
+Private Sub btnRegistDeptUser_Click()
+    Dim Response As PBResponse
+    Dim DeptUserID As String
+    Dim DeptUserPWD As String
+    
+    '홈택스에서 생성한 현금영수증 부서사용자 아이디
+    DeptUserID = "userid_test"
+    
+    '홈택스에서 생성한 현금영수증 부서사용자 비밀번호
+    DeptUserPWD = "passwd_test"
+    
+    Set Response = htCashbillService.RegistDeptUser(txtCorpNum.Text, DeptUserID, DeptUserPWD)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(htCashbillService.LastErrCode) + vbCrLf + "응답메시지 : " + htCashbillService.LastErrMessage)
