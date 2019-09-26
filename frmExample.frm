@@ -227,7 +227,7 @@ Begin VB.Form frmExample
       Height          =   315
       Left            =   6120
       TabIndex        =   1
-      Text            =   "testkorea_linkhub"
+      Text            =   "testkorea"
       Top             =   120
       Width           =   1935
    End
@@ -235,7 +235,7 @@ Begin VB.Form frmExample
       Height          =   315
       Left            =   2400
       TabIndex        =   0
-      Text            =   "6798700433"
+      Text            =   "1234567890"
       Top             =   135
       Width           =   1935
    End
@@ -407,10 +407,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '=========================================================================
 '
-' 팝빌 홈택스 현금영수증 매입매출 API VB 6.0 SDK Example
+' 팝빌 홈택스 현금영수증 조회 API VB 6.0 SDK Example
 '
-' - VB6 SDK 연동환경 설정방법 안내 : http://blog.linkhub.co.kr/569/
-' - 업데이트 일자 : 2019-02-11
+' - 업데이트 일자 : 2019-09-26
 ' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991
 ' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
@@ -1213,5 +1212,8 @@ Private Sub Form_Load()
     
     '연동환경 설정값 True(테스트용), False(상업용)
     htCashbillService.IsTest = True
+    
+    '인증토큰 IP제한기능 사용여부, True(권장)
+    htCashbillService.IPRestrictOnOff = True
 End Sub
 
