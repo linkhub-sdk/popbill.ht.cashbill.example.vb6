@@ -409,7 +409,7 @@ Attribute VB_Exposed = False
 '
 ' 팝빌 홈택스 현금영수증 조회 API VB 6.0 SDK Example
 '
-' - 업데이트 일자 : 2019-09-26
+' - 업데이트 일자 : 2020-01-31
 ' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991
 ' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
@@ -445,6 +445,7 @@ Private htCashbillService As New PBHTCashbillService
 '=========================================================================
 ' 파트너의 연동회원으로 가입된 사업자번호인지 확인합니다.
 ' - LinkID는 인증정보로 설정되어 있는 링크아이디 값입니다.
+' - https://docs.popbill.com/htcashbill/vb/api#CheckIsMember
 '=========================================================================
 Private Sub btnCheckIsMember_Click()
     Dim Response As PBResponse
@@ -461,6 +462,7 @@ End Sub
 
 '=========================================================================
 ' 팝빌 회원아이디 중복여부를 확인합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#CheckID
 '=========================================================================
 Private Sub btnCheckID_Click()
     Dim Response As PBResponse
@@ -477,6 +479,7 @@ End Sub
 
 '=========================================================================
 ' 팝빌 연동회원 가입을 요청합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#JoinMember
 '=========================================================================
 Private Sub btnJoinMember_Click()
     Dim joinData As New PBJoinForm
@@ -536,6 +539,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 홈택스 현금영수증 연동 API 서비스 과금정보를 확인합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetChargeInfo
 '=========================================================================
 Private Sub btnGetChargeInfo_Click()
     Dim ChargeInfo As PBChargeInfo
@@ -558,6 +562,7 @@ End Sub
 '=========================================================================
 ' 팝빌(www.popbill.com)에 로그인된 팝빌 URL을 반환합니다.
 ' - 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetAccessURL
 '=========================================================================
 Private Sub btnGetAccessURL_Click()
     Dim url As String
@@ -574,6 +579,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 담당자를 신규로 등록합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#RegistContact
 '=========================================================================
 Private Sub btnRegistContact_Click()
     Dim joinData As New PBContactInfo
@@ -618,6 +624,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 담당자 목록을 확인합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#ListContact
 '=========================================================================
 Private Sub btnListContact_Click()
     Dim resultList As Collection
@@ -644,6 +651,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 담당자 정보를 수정합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#UpdateContact
 '=========================================================================
 Private Sub btnUpdateContact_Click()
     Dim joinData As New PBContactInfo
@@ -685,6 +693,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 회사정보를 확인합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetCorpInfo
 '=========================================================================
 Private Sub btnGetCorpInfo_Click()
     Dim CorpInfo As PBCorpInfo
@@ -708,6 +717,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 회사정보를 수정합니다
+' - https://docs.popbill.com/htcashbill/vb/api#UpdateCorpInfo
 '=========================================================================
 Private Sub btnUpdateCorpInfo_Click()
     Dim CorpInfo As New PBCorpInfo
@@ -742,6 +752,7 @@ End Sub
 ' 연동회원의 잔여포인트를 확인합니다.
 ' - 과금방식이 파트너과금인 경우 파트너 잔여포인트(GetPartnerBalance API)
 '   를 통해 확인하시기 바랍니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetBalance
 '=========================================================================
 Private Sub btnGetBalance_Click()
     Dim balance As Double
@@ -759,6 +770,7 @@ End Sub
 '=========================================================================
 ' 연동회원 포인트 충전 URL을 반환합니다.
 ' - URL 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetChargeURL
 '=========================================================================
 Private Sub btnGetChargeURL_Click()
     Dim url As String
@@ -777,6 +789,7 @@ End Sub
 ' 파트너 잔여포인트를 확인합니다.
 ' - 과금방식이 연동과금인 경우 연동회원 잔여포인트(GetPartnerBalance API)
 '   를 통해 확인하시기 바랍니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetPartnerBalance
 '=========================================================================
 Private Sub btnGetPartnerBalance_Click()
     Dim balance As Double
@@ -794,6 +807,7 @@ End Sub
 '=========================================================================
 ' 파트너 포인트 충전 URL을 반환합니다.
 ' - URL 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetPartnerURL
 '=========================================================================
 Private Sub btnGetPartnerURL_CHRG_Click()
     Dim url As String
@@ -809,10 +823,9 @@ Private Sub btnGetPartnerURL_CHRG_Click()
 End Sub
 
 '=========================================================================
-'현금영수증 매출/매입 내역 수집을 요청합니다
-'- 홈택스연동 프로세스는 "[홈택스연동(현금영수증) API 연동매뉴얼] >
-'  1.1. 홈택스연동(현금영수증) API 구성" 을 참고하시기 바랍니다.
-'- 수집 요청후 반환받은 작업아이디(JobID)의 유효시간은 1시간 입니다.
+' 현금영수증 매출/매입 내역 수집을 요청합니다
+' - 수집 요청후 반환받은 작업아이디(JobID)의 유효시간은 1시간 입니다.
+' - https://docs.popbill.com/htcashbill/vb/api#RequestJob
 '=========================================================================
 Private Sub btnRequestJob_Click()
     Dim jobID As String
@@ -842,9 +855,8 @@ Private Sub btnRequestJob_Click()
 End Sub
 
 '=========================================================================
-'수집 요청 상태를 확인합니다.
-'- 응답항목 관한 정보는 "[홈택스연동 (현금영수증) API 연동매뉴얼] >
-'  3.1.2. GetJobState(수집 상태 확인)" 을 참고하시기 바랍니다.
+' 수집 요청 상태를 확인합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetJobState
 '=========================================================================
 Private Sub btnGetJobState_Click()
     Dim jobInfo As PBHTCashbillJobState
@@ -874,10 +886,9 @@ Private Sub btnGetJobState_Click()
 End Sub
 
 '=========================================================================
-'수집 요청건들에 대한 상태 목록을 확인합니다.
-'- 수집 요청 작업아이디(JobID)의 유효시간은 1시간 입니다.
-'- 응답항목에 관한 정보는 "[홈택스연동 (현금영수증) API 연동매뉴얼] >
-'  3.1.3. ListActiveJob(수집 상태 목록 확인)" 을 참고하시기 바랍니다.
+' 수집 요청건들에 대한 상태 목록을 확인합니다.
+' - 수집 요청 작업아이디(JobID)의 유효시간은 1시간 입니다.
+' - https://docs.popbill.com/htcashbill/vb/api#ListActiveJob
 '=========================================================================
 Private Sub btnListActiveJob_Click()
     Dim jobList As Collection
@@ -919,9 +930,8 @@ Private Sub btnListActiveJob_Click()
 End Sub
 
 '=========================================================================
-'검색조건을 사용하여 수집결과를 조회합니다.
-'- 응답항목에 관한 정보는 "[홈택스연동 (현금영수증) API 연동매뉴얼] >
-'  3.2.1. Search(수집 결과 조회)" 을 참고하시기 바랍니다.
+' 검색조건을 사용하여 수집결과를 조회합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#Search
 '=========================================================================
 Private Sub btnSearch_Click()
     Dim SearchList As PBHTCashbillSearch
@@ -1001,9 +1011,8 @@ Private Sub btnSearch_Click()
 End Sub
 
 '=========================================================================
-'현금영수증 매입/매출 내역의 수집 결과 요약정보를 조회합니다.
-'- 응답항목에 관한 정보는 "[홈택스연동 (현금영수증) API 연동매뉴얼] >
-'  3.2.2. Summary(수집 결과 요약정보 조회)" 을 참고하시기 바랍니다.
+' 현금영수증 매입/매출 내역의 수집 결과 요약정보를 조회합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#Summary
 '=========================================================================
 Private Sub btnSummary_Click()
     Dim summaryInfo As PBHTCashbillSummary
@@ -1044,6 +1053,7 @@ End Sub
 '=========================================================================
 ' 정액제 신청 팝업 URL을 반환합니다.
 ' - 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetFlatRatePopUpURL
 '=========================================================================
 Private Sub btnGetFlatRatePopUpURL_Click()
     Dim url As String
@@ -1060,6 +1070,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 정액제 서비스 이용상태를 확인합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetFlatRateState
 '=========================================================================
 Private Sub btnGetFlatRateState_Click()
     Dim flatRateInfo As PBHTCashbillFlatRate
@@ -1088,6 +1099,7 @@ End Sub
 '=========================================================================
 ' 홈택스 공인인증서 등록 팝업 URL을 반환합니다.
 ' - 반환된 URL은 보안정책에 따라 30초의 유효시간을 갖습니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetCertificatePopUpURL
 '=========================================================================
 Private Sub btnGetCertificatePopUpURL_Click()
     Dim url As String
@@ -1104,6 +1116,7 @@ End Sub
 
 '=========================================================================
 ' 등록된 홈택스 공인인증서의 만료일자를 확인합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#GetCertificateExpireDate
 '=========================================================================
 Private Sub btnGetCertificateExpireDate_Click()
     Dim expireDate As String
@@ -1120,6 +1133,7 @@ End Sub
 
 '=========================================================================
 ' 팝빌에 등록된 공인인증서의 홈택스 로그인을 테스트한다.
+' - https://docs.popbill.com/htcashbill/vb/api#CheckCertValidation
 '=========================================================================
 Private Sub btnCheckCertValidation_Click()
     Dim Response As PBResponse
@@ -1136,6 +1150,7 @@ End Sub
 
 '=========================================================================
 ' 팝빌에 등록된 현금영수증 부서사용자 아이디를 확인합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#CheckDeptUser
 '=========================================================================
 Private Sub btnCheckDeptUser_Click()
     Dim Response As PBResponse
@@ -1152,6 +1167,7 @@ End Sub
 
 '=========================================================================
 ' 팝빌에 등록된 현금영수증 부서사용자 계정정보를 이용하여 홈택스 로그인을 테스트합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#CheckLoginDeptUser
 '=========================================================================
 Private Sub btnCheckLoginDeptUser_Click()
     Dim Response As PBResponse
@@ -1167,7 +1183,8 @@ Private Sub btnCheckLoginDeptUser_Click()
 End Sub
 
 '=========================================================================
-'  팝빌에 등록된 현금영수증 부서사용자 계정정보를 삭제합니다.
+' 팝빌에 등록된 현금영수증 부서사용자 계정정보를 삭제합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#DeleteDeptUser
 '=========================================================================
 Private Sub btnDeleteDeptUser_Click()
     Dim Response As PBResponse
@@ -1184,6 +1201,7 @@ End Sub
 
 '=========================================================================
 ' 홈택스 현금영수증 부서사용자 계정을 등록합니다.
+' - https://docs.popbill.com/htcashbill/vb/api#RegistDeptUser
 '=========================================================================
 Private Sub btnRegistDeptUser_Click()
     Dim Response As PBResponse
@@ -1207,6 +1225,7 @@ Private Sub btnRegistDeptUser_Click()
 End Sub
 
 Private Sub Form_Load()
+
     '모듈 초기화
     htCashbillService.Initialize linkID, SecretKey
     
