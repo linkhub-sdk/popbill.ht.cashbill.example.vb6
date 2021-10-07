@@ -409,7 +409,7 @@ Attribute VB_Exposed = False
 '
 ' 팝빌 홈택스 현금영수증 조회 API VB 6.0 SDK Example
 '
-' - 업데이트 일자 : 2020-01-31
+' - 업데이트 일자 : 2021-10-07
 ' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991
 ' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
@@ -1232,6 +1232,12 @@ Private Sub Form_Load()
     
     '인증토큰 IP제한기능 사용여부, True(권장)
     htCashbillService.IPRestrictOnOff = True
+    
+    ' 팝빌 API 서비스 고정 IP 사용여부, True-사용, False-미사용, 기본값(False)
+    htCashbillService.UseStaticIP = False
+    
+    ' 로컬시스템 시간 사용여부 True-사용, Fasle-미사용, 기본값(False)
+    htCashbillService.UseLocalTimeYN = False
     
 End Sub
 
