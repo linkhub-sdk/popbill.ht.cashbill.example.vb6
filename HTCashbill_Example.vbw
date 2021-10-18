@@ -1,5 +1,5 @@
-frmExample = 120, 51, 1486, 857, , 22, 29, 1259, 878, C
-cStringBuilder = 0, 0, 0, 0, C
+frmExample = 120, 51, 1486, 857, Z, 22, 29, 1259, 878, C
+cStringBuilder = 220, 290, 1463, 880, 
 Linkhub = 198, 261, 1451, 878, 
 LinkhubToken = 0, 0, 0, 0, C
 PBChargeInfo = 0, 0, 0, 0, C
@@ -11,5 +11,5 @@ PBHTCashbillJobState = 0, 0, 0, 0, C
 PBHTCashbillSearch = 154, 203, 1434, 793, 
 PBHTCashbillService = 141, 140, 1374, 792, 
 PBHTCashbillSummary = 0, 0, 0, 0, C
-PBJoinForm = 0, 0, 0, 0, C
+PBJoinForm = 176, 232, 1434, 880, 
 PBResponse = 0, 0, 0, 0, C
