@@ -449,19 +449,19 @@ Attribute VB_Exposed = False
 '
 ' 팝빌 홈택스 현금영수증 조회 API VB 6.0 SDK Example
 '
-' - 업데이트 일자 : 2021-10-18
-' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991
-' - 연동 기술지원 이메일 : code@linkhub.co.kr
+' - 업데이트 일자 : 2022-01-17
+' - 연동 기술지원 연락처 : 1600-8536
+' - 연동 기술지원 이메일 : code@linkhubcorp.com
+' - VB6 SDK 적용방법 안내 : https://docs.popbill.com/htcashbill/tutorial/vb
 '
 ' <테스트 연동개발 준비사항>
 ' 1) 31, 34번 라인에 선언된 링크아이디(LinkID)와 비밀키(SecretKey)를
 '    링크허브 가입시 메일로 발급받은 인증정보를 참조하여 변경합니다.
-' 2) 팝빌 개발용 사이트(test.popbill.com)에 연동회원으로 가입합니다.
-' 3) 홈택스 연동서비스를 이용하기 위해 팝빌에 인증정보를 등록 합니다. (인증방법은 부서사용자 인증 / 공인인증서 인증 방식이 있습니다.)
+' 2) 홈택스 연동서비스를 이용하기 위해 팝빌에 인증정보를 등록 합니다. (인증방법은 부서사용자 인증 / 공동인증서 인증 방식이 있습니다.)
 '    - 팝빌로그인 > [홈택스연동] > [환경설정] > [인증 관리] 메뉴에서 [홈택스 부서사용자 등록] 혹은
-'      [홈택스 공인인증서 등록]을 통해 인증정보를 등록합니다.
+'      [홈택스 공동인증서 등록]을 통해 인증정보를 등록합니다.
 '    - 홈택스연동 인증 관리 팝업 URL(GetCertificatePopUpURL API) 반환된 URL에 접속 하여
-'      [홈택스 부서사용자 등록] 혹은 [홈택스 공인인증서 등록]을 통해 인증정보를 등록합니다.
+'      [홈택스 부서사용자 등록] 혹은 [홈택스 공동인증서 등록]을 통해 인증정보를 등록합니다.
 
 '=========================================================================
 
@@ -933,14 +933,14 @@ Private Sub btnRequestJob_Click()
     Dim EDate As String
     Dim cbType As KeyType
     
-    '현금영수증 유형, SELL-매출, BUY-매입, TURSTEE-위수탁
+    '현금영수증 유형, SELL-매출, BUY-매입
     cbType = BUY
         
     '시작일자, 표시형식(yyyyMMdd)
-    SDate = "20210901"
+    SDate = "20220101"
     
     '종료일자, 표시형식(yyyyMMdd)
-    EDate = "20210910"
+    EDate = "20220130"
     
     jobID = htCashbillService.RequestJob(txtCorpNum.Text, cbType, SDate, EDate)
     
@@ -956,6 +956,12 @@ End Sub
 
 '=========================================================================
 ' 함수 RequestJob(수집 요청)를 통해 반환 받은 작업 아이디의 상태를 확인합니다.
+' - 거래 내역 조회(Search API) 함수 또는 거래 요약 정보 조회(Summary API) 함수전
+'   수집 작업의 진행 상태, 수집 작업의 성공 여부를 확인해야 합니다.
+' - 작업 상태(jobState) = 3(완료)이고 수집 결과 코드(errorCode) = 1(수집성공)이면
+'   거래 내역 조회(Search) 또는 거래 요약 정보 조회(Summary) 를 해야합니다.
+' - 작업 상태(jobState)가 3(완료)이지만 수집 결과 코드(errorCode)가 1(수집성공)이 아닌 경우에는
+'   오류메시지(errorReason)로 수집 실패에 대한 원인을 파악할 수 있습니다.
 ' - https://docs.popbill.com/htcashbill/vb/api#GetJobState
 '=========================================================================
 Private Sub btnGetJobState_Click()
@@ -1199,7 +1205,7 @@ End Sub
 
 '=========================================================================
 ' 홈택스연동 인증정보를 관리하는 페이지의 팝업 URL을 반환합니다.
-' - 인증방식에는 부서사용자/공인인증서 인증 방식이 있습니다.
+' - 인증방식에는 부서사용자/공동인증서 인증 방식이 있습니다.
 ' - 반환되는 URL은 보안 정책상 30초 동안 유효하며, 시간을 초과한 후에는 해당 URL을 통한 페이지 접근이 불가합니다.
 ' - https://docs.popbill.com/htcashbill/vb/api#GetCertificatePopUpURL
 '=========================================================================
@@ -1335,13 +1341,10 @@ Private Sub Form_Load()
     '연동환경 설정값 True(테스트용), False(상업용)
     htCashbillService.IsTest = True
     
-    '인증토큰 IP제한기능 사용여부, True(권장)
+    '인증토큰 IP제한기능 사용여부, True-사용, False-미사용, 기본값(True)
     htCashbillService.IPRestrictOnOff = True
     
-    ' 팝빌 API 서비스 고정 IP 사용여부, True-사용, False-미사용, 기본값(False)
-    htCashbillService.UseStaticIP = False
-    
-    ' 로컬시스템 시간 사용여부 True-사용, Fasle-미사용, 기본값(False)
+    '로컬시스템 시간 사용여부 True-사용, Fasle-미사용, 기본값(False)
     htCashbillService.UseLocalTimeYN = False
     
 End Sub

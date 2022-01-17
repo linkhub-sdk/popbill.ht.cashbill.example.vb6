@@ -1,9 +1,9 @@
-frmExample = 120, 51, 1486, 857, Z, 22, 29, 1259, 878, C
+frmExample = 120, 51, 1486, 857, , 22, 29, 1259, 878, C
 cStringBuilder = 220, 290, 1463, 880, 
 Linkhub = 198, 261, 1451, 878, 
 LinkhubToken = 0, 0, 0, 0, C
 PBChargeInfo = 0, 0, 0, 0, C
-PBContactInfo = 132, 174, 1386, 764, 
+PBContactInfo = 132, 174, 1386, 764, C
 PBCorpInfo = 0, 0, 0, 0, C
 PBHTCashbill = 132, 174, 1386, 764, C
 PBHTCashbillFlatRate = 0, 0, 0, 0, C
