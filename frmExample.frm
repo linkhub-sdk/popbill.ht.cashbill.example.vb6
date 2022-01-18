@@ -450,7 +450,7 @@ Attribute VB_Exposed = False
 ' 팝빌 홈택스 현금영수증 조회 API VB 6.0 SDK Example
 '
 ' - 업데이트 일자 : 2022-01-17
-' - 연동 기술지원 연락처 : 1600-8536
+' - 연동 기술지원 연락처 : 1600-9854
 ' - 연동 기술지원 이메일 : code@linkhubcorp.com
 ' - VB6 SDK 적용방법 안내 : https://docs.popbill.com/htcashbill/tutorial/vb
 '
