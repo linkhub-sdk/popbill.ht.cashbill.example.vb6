@@ -1345,7 +1345,7 @@ Private Sub Form_Load()
     '인증토큰 IP제한기능 사용여부, True-사용, False-미사용, 기본값(True)
     htCashbillService.IPRestrictOnOff = True
     
-    '로컬시스템 시간 사용여부 True-사용, Fasle-미사용, 기본값(False)
+    '로컬시스템 시간 사용여부 True-사용, False-미사용, 기본값(False)
     htCashbillService.UseLocalTimeYN = False
     
 End Sub
